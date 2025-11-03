@@ -28,3 +28,9 @@ Design Thinking Final Passion Project
 - HMW...help different individuals satisfy their own needs?
 ## Idea:
 - Recipie Planner
+
+# Idea Chosen
+
+## Idea 1 - Budge Planner
+### Research
+- My dad said: *"People lack information about investments, and how important it is to start investing. They start spending money that doesn't add value or is not the right investment, they usually spend more to show off to other people. They go in the trap of loans, buying jewerly, vacations, clubs, and cars. They spend tons of money in these categories and tend to spend more than they make. It gives them a short time of pleasure."*
