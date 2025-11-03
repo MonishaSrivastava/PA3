@@ -10,15 +10,20 @@ Expenses_file = "expenses.txt"
 def add_expenses(expenses):
     print("\nAvailable categories:")
     for category in expenses:
-        print(f"{category}")
+        print(f"{category}") #Prints out all categories
+
+def add_limits(limits):
+    print("Limits set:")
+    for category, limits in limits.items():
+        print(f"{category} : ${limits}")
 
 #def view_summary(expenses, limits):
 
 def save_expenses(filename, expenses):
-    with open(filename, "w") as f:
+    with open(filename, "w") as f: #opens file in write mode
         for category, items in expenses.items():
             for amount, note in items:
-                f.write(f"{category},{amount},{note}\n")
+                f.write(f"{category},{amount},{note}\n") #writes category, amount, and note
     print("All expenses are saved!\n")
 
 def main():
@@ -66,7 +71,8 @@ def main():
         print("\nWhat would you like to do > ")
         print("1. Add an expense")
         print("2. View Summary")
-        print("3. Quit")
+        print("3. Change limits (There is already a base limit set for you, you may change it to your liking)")
+        print("4. Quit")
 
         choice = input("Choose a number > ")
 
@@ -77,6 +83,9 @@ def main():
             view_summary(expenses, limits)
 
         elif choice == "3":
+            add_limits(limits)
+
+        elif choice == "4":
             save_expenses(Expenses_file, expenses)
             print("Your expenses have been saved. Goodbye!")
             break
