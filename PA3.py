@@ -82,6 +82,7 @@ def main():
             break
         else:
             print("Sorry! Either type: 1, 2, 3\n")
+            return
 
 
 #To run the code
