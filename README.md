@@ -34,3 +34,22 @@ Design Thinking Final Passion Project
 ## Idea 1 - Budge Planner
 ### Research
 - My dad said: *"People lack information about investments, and how important it is to start investing. They start spending money that doesn't add value or is not the right investment, they usually spend more to show off to other people. They go in the trap of loans, buying jewerly, vacations, clubs, and cars. They spend tons of money in these categories and tend to spend more than they make. It gives them a short time of pleasure."*
+
+- Article: https://www.pnc.com/insights/personal-finance/save/why-cant-i-save-money.html
+    - People struggle to save money because: *high expenses, lack of budgeting, unclear goals, reliance on credit cards, and burdens like student loans.* 
+    - Successful  saving requires identifying these barriers and building better financial habits such as creating a budget and cutting unnecessary costs
+
+## Reflection
+### WWW
+- 
+- 
+- 
+### EBI
+- 
+- 
+### IMT
+- 
+- 
+- 
+
+#### Bye bye!

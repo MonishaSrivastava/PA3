@@ -1,3 +1,3 @@
-4. food,500.0,oops
-15. taxes!,20.0,taxes
-1. electronics,50.0,yay
+2. clothing/shoes,50.0,oops,2025-11-05 09:30:10
+5. makeup,20.0,bought concealer,2025-11-05 09:27:35
+11. tobacco,10.0,hhahahaha,2025-11-05 09:30:22

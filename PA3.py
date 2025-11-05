@@ -1,72 +1,186 @@
-# Budget Planner
+#-------------------
+#BUDGET PLANNER
+#-------------------
 
-'''
-Make a code that help individuals who struggle to save money become more aware of how they are spending it and what they are spending it on. This Budget Planner will include: Categories, price, and certain messages that keep you in check (ex. "Maybe try to limit spendings on {category}").
+import datetime
 
-'''
-
-Expenses_file = "expenses.txt"
+expenses_file = "expenses.txt"
 
 def add_expenses(expenses):
+    date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("\nAvailable categories:")
     for category in expenses:
         print(f"{category}") #Prints out all categories
 
-def add_limits(limits):
-    print("Limits set:")
-    for category, limits in limits.items():
-        print(f"{category} : ${limits}")
+    category_name = ""
 
-#def view_summary(expenses, limits):
+    while True:
+        choice = input("Which category do you want to add expenses to? (Type the number) > ")
+
+        for category in expenses:
+            if category.startswith(choice + "."):
+                category_name = category
+                break
+
+        if category_name != "":
+            print(f"\nYou selected: {category_name}")
+            break #exit once valid
+        else:
+            print("\nInvalid category number!")
+            break
+    
+    if category_name == "":
+        print("No valid category selected.")
+        return
+
+    try:
+        amount = float(input("Enter the amount you spent: $"))
+    except ValueError:
+        print("\nInvalid input. Please enter a number.")
+        return
+
+    note = input("Add a short note (recommended) > ")
+
+    expenses[category_name].append((amount, note, date))
+    print(f"\nAdded ${amount:.2f} to {category_name}!")
 
 def save_expenses(filename, expenses):
-    with open(filename, "w") as f: #opens file in write mode
+    with open(filename, "w") as f: #opens file in write mode and overwrites the file with users budget/expenses
         for category, items in expenses.items():
-            for amount, note in items:
-                f.write(f"{category},{amount},{note}\n") #writes category, amount, and note
+            for amount, note, date in items:
+                f.write(f"{category},{amount},{note},{date}\n") #overwrites each category, amount, and note in the expenses.txt file
     print("All expenses are saved!\n")
+
+def view_summary(expenses, limits):
+    print("Expense summary!!!")
+    print("-" * 60)
+
+    total_expenses = 0
+    user_has_expenses = False
+
+    for category, items in expenses.items():
+        if items:  # show only if user actually spent here
+            user_has_expenses = True
+            total = sum(amount for amount, note, date in items)
+            total_expenses += total
+            limit = limits.get(category, 0)
+
+            for amount, note, date in items:
+                print(f"${amount:.2f} on {date} ({note}) spent (Limit: ${limit:.2f})")  
+
+            if total > limit: #if the total is higher than the limit, it will make a little caution note saying "Over Budget!"
+                print("Over budget!")
+
+            elif total < limit:
+                print(f"${limit - total:.2f} remaining.")
+
+    if not user_has_expenses:
+        print("No expenses recorded yet.")
+
+    else:
+            print("-" * 60)
+            print(f"Total spent across all categories: ${total_expenses:.2f}")
+
+    print("-" * 60)
+
+def add_limits(limits):
+    print("\nLimits set:")
+    for category, limit in limits.items(): 
+        print(f"{category} : ${limit}")
+
+    while True:
+        choice = input("\nEnter the category number to change > ")
+
+        category_name = ""
+        for category in limits:
+            if category.startswith(choice + "."):
+                category_name = category
+                break
+
+        if category_name != "":
+            print(f"\nYou selected: {category_name}")
+            break
+        else:
+            print("Invalid category number!")
+
+    try:
+        new_limit = float(input(f"Enter new limit for {category_name}: $")) #float basically adds decimals points ex. instead of 10 it would return as 10.0
+
+    except ValueError:
+        print("\nInvalid input. Please enter a number.")
+        return
+
+    limits[category_name] = new_limit
+    print(f"\nUpdated limit for {category_name} to ${new_limit:.2f}")
+
+def load_expenses(filename, expenses):
+    try:
+        with open(filename, "r") as f: #opens file in read mode
+            for line in f:
+                # Remove any extra spaces or newlines from the line
+                clean_line = line.strip()
+
+                # Split the line by commas into separate parts
+                parts = clean_line.split(",")
+
+                # Each line should have 4 parts: category, amount, note, and date
+                if len(parts) != 4:
+                    continue  # move to next line if data is missing or broken
+
+                category = parts[0]
+                amount_text = parts[1]
+                note = parts[2]
+                date = parts[3]
+                try:
+                    amount = float(amount_text)
+                except ValueError:
+                    continue  # skip bad data
+                if category in expenses:
+                    expenses[category].append((amount, note, date))
+        print("\nPrevious expenses loaded successfully!\n")
+    except FileNotFoundError:
+        print("\nNo previous expense file found. Starting fresh!\n")
+
 
 def main():
     name = input("Hello! Please enter your name > ")
-    print(f"Hello {name}!")
+    print(f"\nHello {name}!")
 
     expenses = {
             "1. electronics": [],
             "2. clothing/shoes": [],
             "3. beverages": [],
-            "4. food": [],
+            "4. food (ex. takeout, groceries)": [],
             "5. makeup": [],
             "6. fragrances": [],
-            "7. household essentials (ex. furniture, garden necessities, groceries, decorations, car payments, fuel)": [],
+            "7. household lifestyle/essentials (ex. furniture, garden necessities, decorations)": [],
             "8. sports/fitness": [],
             "9. health (ex. medicine)": [],
             "10. media (ex. game expenses)": [],
             "11. tobacco": [],
             "12. toys/hobbies": [],
-            "13. luxury goods (ex. high end jewerly, expensive watches)": [],
-            "14. pets/pet necessities (ex. cat food)": [],
-            "15. taxes!": []
+            "13. pet necessities (ex. cat food)": [],
+            "14. taxes/loans": []
         }
         #limits
     limits = {
-            "1. electronics": 500,
-            "2. clothing/shoes": 100,
-            "3. beverages": 50,
-            "4. food": 200,
-            "5. makeup": 30,
-            "6. fragrances": 50,
-            "7. household essentials (ex. furniture, garden necessities, groceries, decorations, car payments, fuel)": 700,
-            "8. sports/fitness": 50,
+            "1. electronics": 50,
+            "2. clothing/shoes": 20,
+            "3. beverages": 20,
+            "4. food (ex. takeout, groceries)": 15,
+            "5. makeup": 10,
+            "6. fragrances": 30,
+            "7. household lifestyle/essentials (ex. furniture, garden necessities, decorations)": 40,
+            "8. sports/fitness": 25,
             "9. health (ex. medicine)": 0,
-            "10. media (ex. game expenses)": 25,
+            "10. media (ex. game expenses)": 10,
             "11. tobacco": 10,
             "12. toys/hobbies": 30,
-            "13. luxury goods (ex. high end jewerly, expensive watches)": 100,
-            "14. pet necessities (ex. cat food)": 150,
-            "15. taxes!": 0
+            "13. pet necessities (ex. cat food)": 20,
+            "14. taxes/loans": 0
         }
 
-
+    load_expenses(expenses_file, expenses)
     while True:
         print("\nWhat would you like to do > ")
         print("1. Add an expense")
@@ -86,12 +200,12 @@ def main():
             add_limits(limits)
 
         elif choice == "4":
-            save_expenses(Expenses_file, expenses)
+            save_expenses(expenses_file, expenses)
             print("Your expenses have been saved. Goodbye!")
             break
         else:
-            print("Sorry! Either type: 1, 2, 3\n")
-            return
+            print("Sorry! Either type: 1, 2, 3, 4\n")
+            continue
 
 
 #To run the code
