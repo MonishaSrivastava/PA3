@@ -41,7 +41,7 @@ def add_expenses(expenses):
 
     note = input("Add a short note (recommended) > ")
 
-    expenses[category_name].append((amount, note, date)) #adds tuple to selected category (yay i learnt tuples last proj)
+    expenses[category_name].append((amount, note, date)) #adds tuple (fixed set of related values) to selected category (yay i learnt tuples last proj). Python finds the category list in the expenses dictionary and add a new record (amount, note, and date) to it.
     print(f"\nAdded ${amount:.2f} to {category_name}!")
 
 def save_expenses(filename, expenses):
@@ -61,10 +61,13 @@ def view_summary(expenses, limits):
     for category, items in expenses.items(): #checks each spending category
         if items:  # show only if user actually spent here
             user_has_expenses = True
-            total = sum(amount for amount, note, date in items) #generator inside sum() totals all expenses
+            total = 0
+            for amount, note, date in items: #for loop goes through a list called items
+                total += amount
             total_expenses += total
-            limit = limits.get(category, 0) #retrieves category limit (default = 0). .get() returns the value (0) of the item with a specified key(category) https://www.w3schools.com/python/ref_dictionary_get.asp -- without this it would show an error for all limits set to 0 such as category health
 
+            limit = limits.get(category, 0) #retrieves category limit (default = 0). .get() returns the value (0) of the item with a specified key(category) https://www.w3schools.com/python/ref_dictionary_get.asp -- without this it would show an error for all limits set to 0 such as category health
+ 
             for amount, note, date in items: #displays each individual expense record
                 print(f"${amount:.2f} on {date} ({note}) spent (Limit: ${limit:.2f})")  
 
@@ -72,7 +75,7 @@ def view_summary(expenses, limits):
                 print("Over budget!")
 
             elif total < limit: #shows how much money remains under the limit
-                print(f"${limit - total:.2f} remaining.")
+                print(f"${limit - total:.2f} remaining.") # - subtracts the total from the limit 
 
     if not user_has_expenses: #without this it won't run if the user didn't have expenses 
         print("No expenses recorded yet.") #will show this if user does not have any expenses yet
@@ -121,24 +124,24 @@ def load_expenses(filename, expenses):
                 clean_line = line.strip()
 
                 # Split the line by commas into separate parts
-                parts = clean_line.split(",")
+                parts = clean_line.split(",") #split turns line into a list claled parts
 
                 # Each line should have 4 parts: category, amount, note, and date. len function returns the number of characters in the string
                 if len(parts) != 4: #skips incomplete lines https://www.w3schools.com/python/ref_func_len.asp
                     continue  # move to next line if data is missing or broken
-
-                category = parts[0]
-                amount_text = parts[1]
-                note = parts[2]
-                date = parts[3]
+                category = parts[0] #0 is the first part (expense category)
+                amount_text = parts[1] #1 is the second part (str vers of how much was spent)
+                note = parts[2] #2 is the third part (the little note that user typed in for expense)
+                date = parts[3] #3 is the fourth partn (the date/when it was records)
+                #it will print out like: 3. beverages, 12.5, coffee at starbucks, 2025-11-06 {time}.
                 try: #attempts to convert amount into a float -- 10 to 10.00
                     amount = float(amount_text)
                 except ValueError:
                     continue  # skip bad data/entries with invalid input
                 if category in expenses: #adds the expense if category is valid
-                    expenses[category].append((amount, note, date)) #tuple
+                    expenses[category].append((amount, note, date)) #tuple--python re-adds expense back to the programs data structure
         print("\nPrevious expenses loaded successfully!\n")
-    except FileNotFoundError:
+    except FileNotFoundError: #python prints this if the user has no past expenses
         print("\nNo previous expense file found. Starting fresh!\n")
 
 
@@ -182,15 +185,14 @@ def main():
             "14. taxes/loans": 0
         }
 
-    load_expenses(expenses_file, expenses) # load previous data before showing menu
-
+    load_expenses(expenses_file, expenses) #loads previous data before showing menu
 
     while True: #keeps running until user types 4 (quit)
         print("\nWhat would you like to do > ")
         print("1. Add an expense")
         print("2. View Summary")
         print("3. Change limits (There is already a base limit set for you, you may change it to your liking)")
-        print("4. Quit")
+        print("4. Quit and save expenses")
 
         choice = input("Choose a number > ")
 
@@ -215,3 +217,4 @@ def main():
 #To run the code
 if __name__ == "__main__":
     main()
+    
